@@ -1,3 +1,4 @@
+from dotenv import load_dotenv, dotenv_values
 import httpx
 import json
 from socket_requests.connection import manager
@@ -5,6 +6,9 @@ from sqlalchemy.orm import Session
 from model.index import engine
 from model.chat_n_conv import Chat
 from datetime import datetime
+
+load_dotenv()
+config = dotenv_values(".env")
 
 async def inputChat(input, websocket):
 
@@ -15,7 +19,7 @@ async def inputChat(input, websocket):
         async with httpx.AsyncClient(timeout=None) as client:
             async with client.stream(
                 "POST",
-                "http://192.168.1.24:11434/api/generate",
+                f"{config.get("IP")}/api/generate",
                 json={
                     "model": "qwen2.5:7b",
                     "prompt": input_prompt
