@@ -1,39 +1,41 @@
 export function taskReducer(tasks = [], action){
+    // id = conversation id 
     switch (action.type) {
         case 'add' : {
             return [
                 ...tasks,
                 {
                     id: action.id,
+                    chat_id: action.chat_id,
                     from: action.from,
                     message: action.message,
-                    timestamp: action.time
+                    timestamp: action.timestamp
                 }
             ]
         }
         case 'update' : {
-            if (tasks.length > 0) {
+            const ifExists = tasks.find(data => data.chat_id == action.chat_id)
+            if(ifExists !== undefined){
                 return tasks.map(data => {
-                    if (data.id == action.id){
+                    if (data.chat_id == action.chat_id){
                         return {
                             ...data,
                             message: action.message
                         }
-                    }
-                    return data;
+                    }else 
+                        return data;
                 })
-            }else{
-                return [
-                    ...tasks,
-                    {
-                        id: action.id,
-                        from: action.from,
-                        message: action.message,
-                        timestamp: action.time
-                    }
-                ];
             }
-
+            return [
+                ...tasks,
+                {
+                    id: action.id,
+                    chat_id: action.chat_id,
+                    from: action.from,
+                    message: action.message,
+                    timestamp: action.timestamp
+                }
+            ]
         }
 
         default: {

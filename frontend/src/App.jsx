@@ -12,7 +12,7 @@ function App() {
   let [btnstate,setBtnState] = useState(true);
   let [res,setRes] = useState("");
   let { sendMessage } = useSocket(res);
-
+  // console.log(messages)
   useEffect(() => {
     fetch("http://localhost:8000/", {
       "method": "POST",
@@ -23,7 +23,6 @@ function App() {
     })
     .then(response => response.json())
     .then(json => {
-      console.log(json)
       setRes(json.data[0].chat_id)
     })
     .catch(error => console.log(error));
@@ -31,11 +30,12 @@ function App() {
 
 
   function sendRequest() {    
-    sendMessage(message);
+    const tempId = sendMessage(message);
 
     dispatch({
-      type: 'update',
+      type: 'add',
       id: res,
+      chat_id: tempId,
       from: 'user',
       message: message,
       timestamp: Date.now()
@@ -47,9 +47,11 @@ function App() {
 
   return (
     <>
-      <section className={appscss.airesponse}>{messages.map((msg,key) => (
-        <div key={key}>{msg.message}</div>
-      ))}</section>
+      <section className={appscss.airesponse}>
+          {messages.map((msg,key) => (
+            <div key={key}>{msg.message}</div>
+          ))}
+      </section>
       <div className={appscss.wrapper}>
         <input 
           className={appscss.chatbox} 

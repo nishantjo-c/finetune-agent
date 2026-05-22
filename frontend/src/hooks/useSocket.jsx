@@ -1,6 +1,8 @@
 import { useEffect, useRef, useReducer, useState } from "react";
 import { taskReducer } from "./taskReducer";
 import { useDispatch, useSelector } from "react-redux"
+import { v4 as uuidv4 } from "uuid"
+import utf8 from "utf8"
 
 export const useSocket = (data) => {
     const connection = useRef(null);
@@ -18,13 +20,15 @@ export const useSocket = (data) => {
 
         socket.onmessage = ( event ) => {
             const data = JSON.parse(event.data);
-            console.log(data)
+            // console.log(data)
             if(!data.done){
                 res += data.msg;
                 
                 dispatch({
                     type: 'update',
                     id: data.id,
+                    chat_id: data.chat_unique_id,
+                    temp_id: data.temp_id,
                     from: 'ai',
                     message: res,
                     timestamp: data.time
@@ -44,9 +48,12 @@ export const useSocket = (data) => {
     }, [data]);
 
     const sendMessage = (message) => {
+        const initiateID = uuidv4();
         if(connection.current && connection.current.readyState === WebSocket.OPEN){
-            connection.current.send(message);
+            const sendData = utf8.encode(JSON.stringify({"id": initiateID, "message": message}));
+            connection.current.send(sendData);
         }
+        return initiateID;
     }
 
     return {
