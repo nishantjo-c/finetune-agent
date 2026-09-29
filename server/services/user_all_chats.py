@@ -8,9 +8,8 @@ async def all_chats (params):
     try:
         
         session = Session(engine)
-        queryResponse = select(Conversation.id).join(target= Chat)
-        execution = session.execute(queryResponse)
-        raw_data = execution.mappings().all()
+        queryResponse = select(Conversation.id)
+        raw_data = session.execute(queryResponse).mappings().fetchall()
         
         return raw_data
             

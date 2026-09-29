@@ -12,11 +12,6 @@ export function ChatArea () {
 
     return (
         <>
-          <section className={appscss.airesponse}>
-              {messages.map((msg,key) => (
-                <div key={key}>{msg.message}</div>
-              ))}
-          </section>
           <div className={appscss.wrapper}>
             <input 
               className={appscss.chatbox} 
@@ -26,7 +21,7 @@ export function ChatArea () {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             />
-            {btnstate && <Send status={btnstate} msg={message} setMessage={setMessage} />}
+            {btnstate && <Send id={""} status={btnstate} msg={message} setMessage={setMessage} />}
           </div>
         </>
     )

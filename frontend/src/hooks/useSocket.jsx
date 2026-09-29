@@ -55,8 +55,8 @@ export const useSocket = () => {
         })
     } 
 
-    const sendMessage = async (message, chatId) => {        
-        const socket = await connectSocket(chatId);
+    const sendMessage = async (message, chatId, soc=null) => {        
+        const socket = soc ?? await connectSocket(chatId);
         const initiateID = uuidv4();
         if(socket.readyState === WebSocket.OPEN){
             const sendData = utf8.encode(JSON.stringify({"id": initiateID, "message": message}));
@@ -67,13 +67,14 @@ export const useSocket = () => {
 
     useEffect(() => {
         return () => {
-            if(socket.current) {
-                socket.current.onclose();
+            if(connection.current) {
+                connection.current.onclose();
             }
         }
     }, []);
 
     return {
-        sendMessage
+        sendMessage,
+        connectSocket
     }
 }

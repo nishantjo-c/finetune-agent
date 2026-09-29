@@ -1,0 +1,16 @@
+.wrapper {
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    // background-color: red;
+    display:flex;
+    align-items: center;
+}
+
+.chatbox {
+    width: 900px;
+    height: 60px;
+    border-radius: 15px;
+    position: relative;
+}

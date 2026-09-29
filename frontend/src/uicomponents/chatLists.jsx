@@ -26,7 +26,9 @@ export function ChatLists () {
         <div className={chatcss.wrapper}>
             {chats.map((val,key) => (
                 <div key={key}>
-                    <Link to='/'>
+                    <Link to={{
+                        pathname: val.id
+                    }}>
                         {val.id}
                     </Link>
                 </div>

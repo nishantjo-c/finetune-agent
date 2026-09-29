@@ -2,12 +2,14 @@ import { useState, useEffect, useReducer } from 'react'
 import { useSocket } from '../hooks/useSocket';
 import { useDispatch, useSelector } from "react-redux"
 import appscss from "./chatarea.module.scss";
+import { useNavigate } from 'react-router';
 
-export function Send ({msg, setMessage}){
+export function Send ({id, msg, setMessage, socket}){
 
-    let [res,setRes] = useState("");
+    let [res,setRes] = useState(id);
     let { sendMessage } = useSocket();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
 
     async function getChatId() {
@@ -22,38 +24,37 @@ export function Send ({msg, setMessage}){
         return response.data[0].chat_id;
     }
 
-    function sendRequest() {  
+    async function sendRequest() {  
         if(res === ""){
-            getChatId()
-            .then((response) => {
-                setRes(response);
-                sendMessage(msg, response).then(tempId => {
-                    dispatch({
-                        type: 'add',
-                        id: res,
-                        chat_id: tempId,
-                        from: 'user',
-                        message: msg,
-                        timestamp: Date.now()
-                    });
+            let response = await getChatId()
+            setRes(response);
+            let tempId = await sendMessage(msg, response);
+            dispatch({
+                type: 'add',
+                id: res,
+                chat_id: tempId,
+                from: 'user',
+                input: msg,
+                message: "",
+                timestamp: Date.now()
+            });
+    
+            setMessage("");
+            navigate(`/${response}`)
             
-                    setMessage("");
-                });
-        
-            });
         }else{
-            const tempId = sendMessage(msg, res).then(tempId => {
-                dispatch({
-                    type: 'add',
-                    id: res,
-                    chat_id: tempId,
-                    from: 'user',
-                    message: msg,
-                    timestamp: Date.now()
-                });
-        
-                setMessage("");
+            const tempId = await sendMessage(msg, res, socket);
+            dispatch({
+                type: 'add',
+                id: res,
+                chat_id: tempId,
+                from: 'user',
+                input: msg,
+                message: "",
+                timestamp: Date.now()
             });
+    
+            setMessage("");
         }
     }
 

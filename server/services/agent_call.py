@@ -13,7 +13,7 @@ config = dotenv_values(".env")
 async def inputChat(input, websocket):
 
     try:
-        input_prompt = input['data']
+        input_prompt = input['data']['message']
         ai_response = []
         chat_id = ""
         async with httpx.AsyncClient(timeout=None) as client:
@@ -54,7 +54,8 @@ async def inputChat(input, websocket):
                                 "msg":text, 
                                 "done": ai_data.get("done"), 
                                 "time":str(current_time), 
-                                "chat_unique_id": str(chat_entry.id)
+                                "chat_unique_id": str(chat_entry.id),
+                                "temp_id": input['data']['id']
                                 }
                             await manager.send_personal_text(json.dumps(sendMsg), websocket)
                     except:

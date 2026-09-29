@@ -5,6 +5,7 @@ from sqlalchemy import select
 from model.index import engine
 from model.chat_n_conv import Conversation
 from uuid import UUID
+import json
 
 async def connectToChat(websocket: WebSocket, chat_id: UUID):
 
@@ -20,7 +21,7 @@ async def connectToChat(websocket: WebSocket, chat_id: UUID):
         await manager.connect(websocket)
         while True:
             data = await websocket.receive_text()
-            await inputChat({"id": chat_id,"data": data}, websocket)
+            await inputChat({"id": chat_id,"data": json.loads(data)}, websocket)
     
     except WebSocketDisconnect:
         manager.disconnect(websocket)

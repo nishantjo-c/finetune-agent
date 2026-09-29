@@ -8,6 +8,7 @@ export function taskReducer(tasks = [], action){
                     id: action.id,
                     chat_id: action.chat_id,
                     from: action.from,
+                    input: action.input,
                     message: action.message,
                     timestamp: action.timestamp
                 }
@@ -32,9 +33,24 @@ export function taskReducer(tasks = [], action){
                     id: action.id,
                     chat_id: action.chat_id,
                     from: action.from,
+                    input: action.input,
                     message: action.message,
                     timestamp: action.timestamp
                 }
+            ]
+        }
+        case 'load': {
+            return [
+                action.chatData.map(data => {
+                    return {
+                        id: data.id,
+                        chat_id: data.convo,
+                        from: "",
+                        input: data.user,
+                        message: data.agent,
+                        timestamp: data.timestamp
+                    }
+                })
             ]
         }
 

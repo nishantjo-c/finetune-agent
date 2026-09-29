@@ -6,9 +6,9 @@ pipeline {
                 sh '''
                     buildctl build \
                         --frontend dockerfile.v0 \
-                        --local context=. \
-                        --local dockerfile=. \
-                        --output type=oci,dest=/tmp/my-image.tar
+                        --local context=./frontend \
+                        --local dockerfile=./frontend \
+                        --output type=image,name=ghcr.io/nishantjo-c/finetune-agent-frontend:42,push=true
                 '''
             }
         }
